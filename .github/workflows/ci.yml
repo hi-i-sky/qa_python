@@ -1,0 +1,30 @@
+name: Python CI
+
+on:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    lint-and-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions/setup-python@v6
+              with:
+                python-version: '3.11'
+                architecture: 'x64'
+            - name: Install requirements
+              run: |
+                pip install flake8
+                pip install -r requirements.txt
+            - name: Lint with flake8
+              run: |
+                flake8 . --count --max-line-length=127 --statistics || true
+            - name: Run Tests
+              run: |
+                pytest -v tests.py
+    
+
+
